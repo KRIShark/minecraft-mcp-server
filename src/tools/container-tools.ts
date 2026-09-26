@@ -91,12 +91,14 @@ export function registerContainerTools(factory: ToolFactory, getBot: () => minef
     let timer: ReturnType<typeof setTimeout> | undefined;
     let timedOut = false;
     const opened = bot.openContainer(block);
-    opened.then(window => { if (timedOut && bot.currentWindow === window) void window.close().catch(() => undefined); }).catch(() => undefined);
+    opened.then(window => { if (timedOut && bot.currentWindow === window) void Promise.resolve().then(() => window.close()).catch(() => undefined); }).catch(() => undefined);
     let window: Container;
     try {
       window = await Promise.race([opened, new Promise<never>((_, reject) => { timer = setTimeout(() => { timedOut = true; reject(new Error('Timed out opening container.')); }, 10000); })]);
     } catch (error) {
-      if (bot.currentWindow) await bot.closeWindow(bot.currentWindow).catch(() => undefined);
+      if (bot.currentWindow) {
+        try { await bot.closeWindow(bot.currentWindow); } catch { /* preserve the original open failure */ }
+      }
       throw error;
     } finally { if (timer) clearTimeout(timer); }
     if (bot.currentWindow !== window) throw new Error('Mineflayer did not confirm an open container window.');

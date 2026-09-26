@@ -147,7 +147,7 @@ Copy `.env.example` to a private `.env`, set your deployment values, run `npm in
 node index.js
 ```
 
-`index.js` reads `.env` without replacing existing environment variables. HTTP mode requires all the variables below and fails at startup if they are missing or invalid. `MINECRAFT_PORT` is the Minecraft Java server port; `MCP_PORT` is the remote MCP listener port.
+`index.js` reads `.env` beside the entrypoint without replacing nonempty environment variables. HTTP mode requires all the variables below and fails at startup if they are missing or invalid. `MINECRAFT_PORT` is the Minecraft Java server port; `MCP_PORT` is the remote MCP listener port.
 
 | Variable | Purpose |
 | --- | --- |

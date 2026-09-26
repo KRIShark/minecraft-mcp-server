@@ -18,7 +18,7 @@ function host(value: string | undefined, name: string): string {
 
 export function parseHttpConfig(env: Record<string, string | undefined> = process.env): HttpConfig {
   const path = env.MCP_PATH;
-  if (!path || !/^\/(?:[a-zA-Z0-9._~!$&'()+,;=:@%-]|\/)*$/.test(path) || path.includes('//') || path.includes('..') || path.includes('?') || path.includes('#')) throw new Error('MCP_PATH must be an absolute HTTP path such as /mcp.');
+  if (!path || !/^\/(?:[a-zA-Z0-9._~!$&'()+,;=:@%-]|\/)*$/.test(path) || path.includes('//') || path.includes('..') || path.includes('?') || path.includes('#')) throw new Error('MCP_PATH is missing or invalid. Set MCP_PATH=/mcp in the environment or in .env beside index.js.');
   const username = env.MINECRAFT_USERNAME;
   if (!username || !/^[A-Za-z0-9_]{1,16}$/.test(username)) throw new Error('MINECRAFT_USERNAME must be 1–16 Minecraft username characters.');
   return {
