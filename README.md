@@ -84,7 +84,7 @@ Example usage: [shared Claude chat](https://claude.ai/share/535d5f69-f102-4cdb-9
 
 ## Available Commands
 
-Once connected to a Minecraft server, Claude can use these commands:
+Once connected to a Minecraft server, an MCP client can use 73 tools. In addition to the original building, crafting and inventory tools, the bot can inspect players and entities, follow targets, fight, use items, interact with the world, ride vehicles and trade with villagers.
 
 ### Movement
 - `get-position` - Get the current position of the bot
@@ -117,10 +117,55 @@ Once connected to a Minecraft server, Claude can use these commands:
 
 ### Entity Interaction
 - `find-entity` - Find the nearest entity of a specific type
+- `list-nearby-entities` - List visible entities with IDs, positions, distances and equipment
+- `list-players` / `inspect-player` - Inspect known or named players
+- `interact-with-entity` - Right-click an entity
+- `use-held-item-on-entity` - Use the held item on an entity
+- `mount-entity` / `dismount` / `move-vehicle` - Ride and steer vehicles or animals
+
+### Navigation and Combat
+- `follow-entity` - Follow a player or entity continuously
+- `look-at-entity` - Face a player or entity
+- `collect-nearby-item` - Pathfind to and collect a dropped item
+- `navigation-status` / `stop-navigation` - Inspect or stop navigation
+- `attack-entity-once` - Perform one melee attack
+- `start-combat` - Pursue and repeatedly attack a player or mob
+- `combat-status` / `stop-combat` - Inspect or stop combat
+
+### Player Actions
+- `get-bot-status` - Read health, hunger, oxygen, XP, position, weather and time
+- `get-equipment` - Inspect held, armor and off-hand slots
+- `unequip-item` - Remove equipped gear
+- `drop-item` - Give items to a nearby player through normal item dropping
+- `select-hotbar-slot` - Select hotbar slot 0 through 8
+- `consume-held-item` - Eat or drink the held item
+- `activate-held-item` / `deactivate-held-item` - Use or release bows, shields, projectiles and other items
+- `fish` / `swing-arm` - Fish or swing an arm
+- `set-movement-state` / `clear-movement-states` - Control sprint, sneak, jump and directional movement
+
+### World Interaction
+- `activate-block` - Use a door, button, lever, bell or other interactive block
+- `sleep-in-bed` / `wake-up` - Sleep and leave a bed
+- `update-sign` - Write up to four lines on a sign
+- `estimate-dig-time` / `stop-digging` - Inspect or cancel digging
+- `start-elytra-flight` - Start elytra flight
+- `write-book` - Write pages into a writable book
+
+### Villager Trading
+- `open-villager` - Open a nearby villager and list offers
+- `list-villager-trades` - Refresh visible offers
+- `trade-with-villager` - Execute an offer by index
+- `close-villager` - Close the trade window
+
+### Inventory and Server Utilities
+- `move-inventory-slot` - Move a stack between slots in the current window
+- `complete-chat-input` - Request server chat or command completions
+- `list-scoreboards` / `list-teams` - Inspect server scoreboards and teams
 
 ### Communication
 - `send-chat` - Send a chat message in-game
 - `read-chat` - Get recent chat messages from players
+- `whisper-player` - Send a private message to a player
 
 ### Game State
 - `detect-gamemode` - Detect the gamemode on game

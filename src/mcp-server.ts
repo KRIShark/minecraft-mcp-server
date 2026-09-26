@@ -12,6 +12,13 @@ import { registerGameStateTools } from './tools/gamestate-tools.js';
 import { registerCraftingTools } from './tools/crafting-tools.js';
 import { registerFurnaceTools } from './tools/furnace-tools.js';
 import { registerContainerTools } from './tools/container-tools.js';
+import { registerObservationTools } from './tools/observation-tools.js';
+import { registerPlayerActionTools } from './tools/player-action-tools.js';
+import { registerNavigationTools } from './tools/navigation-tools.js';
+import { registerInteractionTools } from './tools/interaction-tools.js';
+import { registerCombatTools } from './tools/combat-tools.js';
+import { registerTradingTools } from './tools/trading-tools.js';
+import { registerUtilityTools } from './tools/utility-tools.js';
 
 export function createMcpServer(connection: BotConnection, messageStore: MessageStore): McpServer {
   const server = new McpServer({ name: 'minecraft-mcp-server', version: '2.0.4' });
@@ -27,5 +34,12 @@ export function createMcpServer(connection: BotConnection, messageStore: Message
   registerCraftingTools(factory, getBot);
   registerFurnaceTools(factory, getBot);
   registerContainerTools(factory, getBot);
+  registerObservationTools(factory, getBot);
+  registerPlayerActionTools(factory, getBot);
+  registerNavigationTools(factory, getBot);
+  registerInteractionTools(factory, getBot);
+  registerCombatTools(factory, getBot);
+  registerTradingTools(factory, getBot);
+  registerUtilityTools(factory, getBot);
   return server;
 }
