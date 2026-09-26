@@ -74,7 +74,7 @@ export class BotConnection {
       bot.pathfinder.setMovements(defaultMove);
 
       bot.chat('LLM-powered bot ready to receive instructions!');
-      this.callbacks.onLog('info', `Bot connected successfully. Username: ${this.config.username}, Server: ${this.config.host}:${this.config.port}`);
+      this.callbacks.onLog('info', 'Bot connected successfully');
     });
 
     bot.on('chat', (username, message) => {

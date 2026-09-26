@@ -20,7 +20,7 @@ test('allows JSON messages to pass through', (t) => {
   process.stdout.write = originalWrite;
 });
 
-test('allows timestamp log messages to pass through', (t) => {
+test('filters timestamp log messages from protocol stdout', (t) => {
   const originalWrite = process.stdout.write;
   let capturedOutput = '';
   
@@ -34,7 +34,7 @@ test('allows timestamp log messages to pass through', (t) => {
   const logMessage = '2025-11-05T19:45:29.842Z [minecraft] [mcp-server] [info] Bot connected\n';
   process.stdout.write(logMessage);
   
-  t.is(capturedOutput, logMessage);
+  t.is(capturedOutput, '');
   
   process.stdout.write = originalWrite;
 });
@@ -116,23 +116,18 @@ test('allows JSON while filtering other messages', (t) => {
   process.stdout.write = originalWrite;
 });
 
-test('suppresses console.error output', (t) => {
+test('keeps console.error available', (t) => {
+  const originalError = console.error;
   setupStdioFiltering();
-  
-  t.notThrows(() => {
-    console.error('This should be suppressed');
-    console.error('No errors thrown');
-  });
+  t.is(console.error, originalError);
 });
 
-test('console.error becomes a no-op function', (t) => {
+test('console.error remains available for diagnostics', (t) => {
   const originalError = console.error;
   
   setupStdioFiltering();
   
-  const result = console.error('test');
-  
-  t.is(result, undefined);
+  t.is(console.error, originalError);
   
   console.error = originalError;
 });

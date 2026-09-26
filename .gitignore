@@ -24,3 +24,6 @@ pids/
 # Claude Code configuration
 .claude
 .idea
+.env
+.env.local
+.env.*.local

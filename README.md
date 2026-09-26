@@ -100,6 +100,11 @@ Once connected to a Minecraft server, Claude can use these commands:
 - `list-inventory` - List all items in the bot's inventory
 - `find-item` - Find a specific item in inventory
 - `equip-item` - Equip a specific item
+- `open-container` - Open a nearby chest, trapped chest, barrel, shulker box, dispenser, dropper, hopper or ender chest at integer `x`, `y`, `z`
+- `get-container-contents` - Read the open container and player inventories separately
+- `deposit-item` - Move an exact `item` name from player inventory into the container; supply `count` or `all: true`, and optional `metadata`
+- `withdraw-item` - Move an exact `item` name from the container into player inventory; supply `count` or `all: true`, and optional `metadata`
+- `close-container` - Close the open container, or report that none was open
 
 ### Block Interaction
 - `place-block` - Place a block at specified coordinates
@@ -119,6 +124,75 @@ Once connected to a Minecraft server, Claude can use these commands:
 
 ### Game State
 - `detect-gamemode` - Detect the gamemode on game
+
+## Container example
+
+Move next to a chest before opening it. Call `open-container` with `{ "x": 100, "y": 64, "z": -20 }`, then `get-container-contents`. The result includes `containerInventory` and `playerInventory` with item name, display name, count, slot, type and metadata. Call `deposit-item` with `{ "item": "cobblestone", "count": 64 }` or `withdraw-item` with `{ "item": "iron_ingot", "count": 10 }`. To transfer every matching stack, use `{ "item": "cobblestone", "all": true }`. Finish with `close-container`. Transfers fail when the source lacks the requested amount or the destination lacks capacity. The bot must be within five blocks, and only one container can be open per bot.
+
+## Local stdio mode
+
+The existing stdio entrypoint remains available after `npm install` and `npm run build`:
+
+```sh
+node dist/main.js --host 127.0.0.1 --port 25565 --username MCPBot
+```
+
+The flags configure the Minecraft target. `MINECRAFT_HOST`, `MINECRAFT_PORT` and `MINECRAFT_USERNAME` can also supply these values. The original defaults remain for local stdio users. Diagnostic logs go to stderr so stdout carries MCP messages.
+
+## Remote Streamable HTTP mode
+
+Copy `.env.example` to a private `.env`, set your deployment values, run `npm install` and `npm run build`, then start with:
+
+```sh
+node index.js
+```
+
+`index.js` reads `.env` without replacing existing environment variables. HTTP mode requires all the variables below and fails at startup if they are missing or invalid. `MINECRAFT_PORT` is the Minecraft Java server port; `MCP_PORT` is the remote MCP listener port.
+
+| Variable | Purpose |
+| --- | --- |
+| `MINECRAFT_HOST` | Minecraft server IP or hostname |
+| `MINECRAFT_PORT` | Minecraft Java server TCP port |
+| `MINECRAFT_USERNAME` | Bot name, 1–16 letters, digits or underscores |
+| `MCP_HOST` | HTTP bind address, such as `0.0.0.0` |
+| `MCP_PORT` | HTTP TCP port |
+| `MCP_PATH` | Absolute endpoint path, such as `/mcp` |
+| `MCP_AUTH_TOKEN` | Optional bearer token; empty disables authentication |
+
+For LM Studio, configure a remote MCP server using the address reachable from that machine:
+
+```json
+{
+  "mcpServers": {
+    "minecraft": {
+      "url": "http://YOUR_SERVER_HOST:YOUR_MCP_PORT/mcp"
+    }
+  }
+}
+```
+
+When `MCP_AUTH_TOKEN` is set, add the header:
+
+```json
+{
+  "mcpServers": {
+    "minecraft": {
+      "url": "http://YOUR_SERVER_HOST:YOUR_MCP_PORT/mcp",
+      "headers": { "Authorization": "Bearer YOUR_TOKEN" }
+    }
+  }
+}
+```
+
+The HTTP endpoint uses MCP Streamable HTTP with per-client sessions. A single Mineflayer bot serves all connected clients; container operations against that bot are serialized. The endpoint accepts requests only at `MCP_PATH` and enforces same-host browser origins when an `Origin` header is present.
+
+### Pterodactyl
+
+Allocate the MCP listener port, set the private `.env` values, and use `node index.js` as the startup command. Make sure the Minecraft target is reachable from the panel server and the MCP allocation is externally reachable for remote clients. Run `npm install` and `npm run build` as part of deployment before starting. Keep `.env` private.
+
+### Security
+
+Set a strong `MCP_AUTH_TOKEN` before exposing the listener to the internet. Use HTTPS through a trusted reverse proxy or tunnel so the token and game commands are encrypted in transit. Bind `MCP_HOST` to a local address when remote access is unnecessary. Access to this endpoint allows control of the Minecraft bot. The server never logs the bearer token. Standard MCP clients should retain the server's `Mcp-Session-Id` header between requests.
 
 ## Contributing
 

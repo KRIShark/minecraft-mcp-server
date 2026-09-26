@@ -22,16 +22,14 @@ export class ToolFactory {
     executor: (args: any) => Promise<McpResponse>
   ): void {
     this.server.tool(name, description, schema, async (args: unknown): Promise<McpResponse> => {
-      const connectionCheck = await this.connection.checkConnectionAndReconnect();
-
-      if (!connectionCheck.connected) {
-        return {
-          content: [{ type: "text", text: connectionCheck.message! }],
-          isError: true
-        };
-      }
-
       try {
+        const connectionCheck = await this.connection.checkConnectionAndReconnect();
+        if (!connectionCheck.connected) {
+          return {
+            content: [{ type: "text", text: connectionCheck.message ?? 'Minecraft bot is not connected.' }],
+            isError: true
+          };
+        }
         const parsedArgs = this.shouldValidateSchema(schema)
           ? this.parseArgs(schema as ZodRawShape, args)
           : args;

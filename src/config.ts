@@ -12,17 +12,17 @@ export function parseConfig(): ServerConfig {
     .option('host', {
       type: 'string',
       description: 'Minecraft server host',
-      default: 'localhost'
+      default: process.env.MINECRAFT_HOST || 'localhost'
     })
     .option('port', {
       type: 'number',
       description: 'Minecraft server port',
-      default: 25565
+      default: process.env.MINECRAFT_PORT ? Number(process.env.MINECRAFT_PORT) : 25565
     })
     .option('username', {
       type: 'string',
       description: 'Bot username',
-      default: 'LLMBot'
+      default: process.env.MINECRAFT_USERNAME || 'LLMBot'
     })
     .help()
     .alias('help', 'h')
